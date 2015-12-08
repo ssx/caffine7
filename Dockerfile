@@ -10,7 +10,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN locale-gen en_US.UTF-8
 
 # add php7 repo
-RUN apt-get install -y openssh-server software-properties-common mysql-server mysql-client nginx python-setuptools curl git unzip
+RUN apt-get install -y openssh-server software-properties-common mysql-client nginx python-setuptools curl git unzip
 RUN LC_ALL=en_US.UTF-8 add-apt-repository -y ppa:ondrej/php-7.0
 
 # update dependancies
@@ -24,10 +24,6 @@ RUN apt-get install -y php7.0-common php7.0-cgi php7.0-cli php7.0-phpdbg php7.0-
 RUN /usr/bin/easy_install supervisor
 RUN /usr/bin/easy_install supervisor-stdout
 ADD ./conf/supervisord.conf /etc/supervisord.conf
-
-# mysql
-EXPOSE 3306
-RUN sed -i -e"s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
 
 # php-fpm config
 RUN mkdir /run/php
@@ -55,7 +51,7 @@ ADD ./start.sh /start.sh
 RUN chmod 755 /start.sh
 
 # volumes
-VOLUME ["/var/lib/mysql", "/usr/share/nginx/www"]
+VOLUME ["/usr/share/nginx/www"]
 
 # bootstrap fire
 CMD ["/bin/bash", "/start.sh"]
